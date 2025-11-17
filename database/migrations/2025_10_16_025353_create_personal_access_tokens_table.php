@@ -8,8 +8,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('personal_access_tokens', function (Blueprint $table) {
-            $table->id();
-            $table->morphs('tokenable');
+            $table->id(); // bigint OK en PostgreSQL
+
+            // Reemplazo de morphs() porque usa unsigned en MySQL
+            $table->string('tokenable_type');
+            $table->bigInteger('tokenable_id'); // sin unsigned
+
+            $table->index(['tokenable_type', 'tokenable_id']); // índice compuesto
+
             $table->string('name');
             $table->string('token', 64)->unique();
             $table->text('abilities')->nullable();
@@ -24,4 +30,3 @@ return new class extends Migration {
         Schema::dropIfExists('personal_access_tokens');
     }
 };
-
