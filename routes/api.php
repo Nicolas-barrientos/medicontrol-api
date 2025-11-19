@@ -25,3 +25,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // ✅ Nueva ruta pública para buscar en el catálogo (CSV importado)
+Route::get('/pami/buscar', function (Illuminate\Http\Request $request) {
+    $q = $request->input('q');
+
+    return App\Models\PamiMedicamento::where('droga', 'ILIKE', "%$q%")
+        ->orWhere('marca', 'ILIKE', "%$q%")
+        ->limit(20)
+        ->get();
+});
