@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// ✅ Nueva ruta pública para buscar en el catálogo (CSV importado)
+// ✅ Ruta para BUSCAR medicamentos (la que ya tenías)
 Route::get('/pami/buscar', function (Illuminate\Http\Request $request) {
     $q = $request->input('q');
 
@@ -32,4 +32,9 @@ Route::get('/pami/buscar', function (Illuminate\Http\Request $request) {
         ->orWhere('marca', 'ILIKE', "%$q%")
         ->limit(20)
         ->get();
+});
+
+// ✅ Ruta para VER TODOS los medicamentos (nueva)
+Route::get('/pami/medicamentos', function () {
+    return App\Models\PamiMedicamento::orderBy('droga')->paginate(50);
 });
