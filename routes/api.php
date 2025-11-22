@@ -10,11 +10,14 @@ Route::middleware('auth:sanctum')->post('/users/update-token', [UserController::
 // 🔒 Rutas protegidas con Sanctum
 Route::middleware('auth:sanctum')->group(function () {
 
-    // CRUD principal de medicamentos
-    Route::apiResource('medicamentos', MedicamentoController::class);
-
+    // CRUD completo de medicamentos
+    Route::get('/medicamentos', [MedicamentoController::class, 'index']);
+    Route::post('/medicamentos', [MedicamentoController::class, 'store']);
+    Route::put('/medicamentos/{id}', [MedicamentoController::class, 'update']);
+    Route::delete('/medicamentos/{id}', [MedicamentoController::class, 'destroy']);
+    
     // Endpoint exclusivo para actualizar solo la imagen
-    Route::put('medicamentos/{medicamento}/imagen', [MedicamentoController::class, 'updateImagen']);
+    Route::post('/medicamentos/{id}/imagen', [MedicamentoController::class, 'updateImagen']);
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -24,17 +27,22 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// ✅ Ruta para BUSCAR medicamentos (la que ya tenías)
+// ✅ Ruta para BUSCAR medicamentos PAMI
 Route::get('/pami/buscar', function (Illuminate\Http\Request $request) {
     $q = $request->input('q');
 
+    if (empty($q)) {
+        return response()->json([]);
+    }
+
     return App\Models\PamiMedicamento::where('droga', 'ILIKE', "%$q%")
         ->orWhere('marca', 'ILIKE', "%$q%")
-        ->limit(20)
+        ->orderBy('droga')
+        ->limit(50)
         ->get();
 });
 
-// ✅ Ruta para VER TODOS los medicamentos (nueva)
+// ✅ Ruta para VER TODOS los medicamentos PAMI (paginado)
 Route::get('/pami/medicamentos', function () {
-    return App\Models\PamiMedicamento::orderBy('droga')->paginate(50);
+    return App\Models\PamiMedicamento::orderBy('droga')->paginate(100);
 });
