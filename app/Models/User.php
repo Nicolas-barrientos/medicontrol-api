@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens; // <- agregado
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -52,5 +52,13 @@ class User extends Authenticatable
     public function medicamentos()
     {
         return $this->hasMany(Medicamento::class);
+    }
+    
+    /**
+     * Relación con los registros de tomas
+     */
+    public function registrosTomas()
+    {
+        return $this->hasMany(RegistroToma::class);
     }
 }

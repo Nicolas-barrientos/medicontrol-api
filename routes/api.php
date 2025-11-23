@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MedicamentoController;
+use App\Http\Controllers\Api\RegistroTomaController;
 use App\Http\Controllers\API\UserController;
 
 Route::middleware('auth:sanctum')->post('/users/update-token', [UserController::class, 'updateToken']);
@@ -18,6 +19,16 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Endpoint exclusivo para actualizar solo la imagen
     Route::post('/medicamentos/{id}/imagen', [MedicamentoController::class, 'updateImagen']);
+
+    // 📊 CRUD de registros de tomas
+    Route::get('/registros-tomas', [RegistroTomaController::class, 'index']);
+    Route::post('/registros-tomas', [RegistroTomaController::class, 'store']);
+    Route::put('/registros-tomas/{id}', [RegistroTomaController::class, 'update']);
+    Route::delete('/registros-tomas/{id}', [RegistroTomaController::class, 'destroy']);
+    
+    // 📈 Ruta para estadísticas y reporte de progreso
+    Route::get('/progreso', [RegistroTomaController::class, 'progreso']);
+    Route::get('/estadisticas', [RegistroTomaController::class, 'estadisticas']);
 
     // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
