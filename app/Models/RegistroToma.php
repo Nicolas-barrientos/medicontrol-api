@@ -9,6 +9,9 @@ class RegistroToma extends Model
 {
     use HasFactory;
 
+    // ⬇️ AGREGAR ESTA LÍNEA
+    protected $table = 'registros_tomas';
+
     protected $fillable = [
         'user_id',
         'medicamento_id',
